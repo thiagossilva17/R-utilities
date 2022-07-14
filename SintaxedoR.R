@@ -12,6 +12,11 @@ BD <- read.csv( "C:/xxx/Thiago Silva/CAMINHO/Teste.csv", sep = ";", encoding = "
 BD <- fread("caminho")
 
 
+#salvando em multiplas planilhas do Excel
+library(openxlsx)
+lista <- list("NOME_DA_SHEET" = BD, "NOME_DA_SHEET2" = BD2)
+write.xlsx(lista, file = "Z:/CAMINHO/CAMINHO/excel.xlsx")
+
 #------------------------------------------------------------------------------
 #Manipulacao de textos
 #Cortar string com determinacao de caractere
@@ -161,3 +166,12 @@ REG <- lm(col2~.,BD)
 #------------------------------------------------------------------------------
 #sites for learning
 #https://www.datanovia.com/en/lessons/select-data-frame-columns-in-r/
+
+#calculo por segmentacao
+BD <- BD %>% group_by(COLUNA1, COLUNA2) %>% summarise_at(vars(COLUNA_VALOR), list(NOME_NOVA_COLUNA = sum))
+#contagem de valores
+BD <- BD %>% count(COLUNA1, COLUNA2, COLUNA3)
+
+#automatizando a identificacao do nome de colunas
+#Aplicando para colunas que possuem em seus titulos o valor especificado:
+apply(BD[, grep("TEXTO_TITULO_DA_COLUNA", names(BD))], margin=1, function(x) sum(x %in% c("VALOR_DA_COLUNA"), na.rm=T))
